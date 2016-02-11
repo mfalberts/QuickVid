@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+// http://www.independent-software.com/weifenluo-dockpanelsuite-tutorial-cookbook/
 using WeifenLuo.WinFormsUI.Docking;
 
 namespace QuickVid
@@ -25,15 +26,10 @@ namespace QuickVid
 		{
 
 		}
+		
 
 		private void MainForm_Load(object sender, EventArgs e)
 		{
-			axWindowsMediaPlayer1.uiMode = "full";
-			axWindowsMediaPlayer1.stretchToFit = true;
-			axWindowsMediaPlayer2.uiMode = "none";
-			axWindowsMediaPlayer2.stretchToFit = true;
-			dockPanel1.Documents[0]
-			axWindowsMediaPlayer1.Show(dockPanel1, DockState.Document);
 			PopluateFileList();
 		}
 
@@ -54,7 +50,14 @@ namespace QuickVid
 		private void listView1_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			if (listView1.SelectedItems.Count >0  && listView1.SelectedItems[0].Text != null)
-				axWindowsMediaPlayer1.URL = listView1.SelectedItems[0].Text;
+			{
+				//axWindowsMediaPlayer1.URL = listView1.SelectedItems[0].Text;
+				VideoDockWindow videoDocker = new VideoDockWindow();
+				videoDocker.Show(dockPanel1, DockState.Document);
+				videoDocker.URL = listView1.SelectedItems[0].Text;
+			}
+
+
 		}
 
 		private void toolStripMenuItem1_Click(object sender, EventArgs e)

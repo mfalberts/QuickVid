@@ -57,7 +57,6 @@
 			this.axWindowsMediaPlayer2 = new AxWMPLib.AxWindowsMediaPlayer();
 			this.playerPanel = new System.Windows.Forms.Panel();
 			this.dockPanel1 = new WeifenLuo.WinFormsUI.Docking.DockPanel();
-			this.axWindowsMediaPlayer1 = new AxWMPLib.AxWindowsMediaPlayer();
 			this.bindingSource1 = new System.Windows.Forms.BindingSource(this.components);
 			this.menuStrip1.SuspendLayout();
 			this.tabControl1.SuspendLayout();
@@ -66,7 +65,6 @@
 			this.tabPage2.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.axWindowsMediaPlayer2)).BeginInit();
 			this.playerPanel.SuspendLayout();
-			((System.ComponentModel.ISupportInitialize)(this.axWindowsMediaPlayer1)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.bindingSource1)).BeginInit();
 			this.SuspendLayout();
 			// 
@@ -93,7 +91,7 @@
 			// openToolStripMenuItem
 			// 
 			this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-			this.openToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.openToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
 			this.openToolStripMenuItem.Text = "&Open";
 			// 
 			// tabControl1
@@ -176,7 +174,6 @@
 			// 
 			// playerPanel
 			// 
-			this.playerPanel.Controls.Add(this.axWindowsMediaPlayer1);
 			this.playerPanel.Controls.Add(this.dockPanel1);
 			this.playerPanel.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.playerPanel.Location = new System.Drawing.Point(0, 24);
@@ -188,6 +185,7 @@
 			// 
 			this.dockPanel1.AllowDrop = true;
 			this.dockPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.dockPanel1.DocumentStyle = WeifenLuo.WinFormsUI.Docking.DocumentStyle.DockingWindow;
 			this.dockPanel1.Location = new System.Drawing.Point(0, 0);
 			this.dockPanel1.Name = "dockPanel1";
 			this.dockPanel1.Size = new System.Drawing.Size(737, 586);
@@ -239,15 +237,6 @@
 			this.dockPanel1.Skin = dockPanelSkin2;
 			this.dockPanel1.TabIndex = 0;
 			// 
-			// axWindowsMediaPlayer1
-			// 
-			this.axWindowsMediaPlayer1.Enabled = true;
-			this.axWindowsMediaPlayer1.Location = new System.Drawing.Point(40, 152);
-			this.axWindowsMediaPlayer1.Name = "axWindowsMediaPlayer1";
-			this.axWindowsMediaPlayer1.OcxState = ((System.Windows.Forms.AxHost.State)(resources.GetObject("axWindowsMediaPlayer1.OcxState")));
-			this.axWindowsMediaPlayer1.Size = new System.Drawing.Size(204, 164);
-			this.axWindowsMediaPlayer1.TabIndex = 2;
-			// 
 			// MainForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -256,6 +245,8 @@
 			this.Controls.Add(this.playerPanel);
 			this.Controls.Add(this.tabControl1);
 			this.Controls.Add(this.menuStrip1);
+			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+			this.IsMdiContainer = true;
 			this.MainMenuStrip = this.menuStrip1;
 			this.Name = "MainForm";
 			this.Text = "QuickVid";
@@ -268,7 +259,6 @@
 			this.tabPage2.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.axWindowsMediaPlayer2)).EndInit();
 			this.playerPanel.ResumeLayout(false);
-			((System.ComponentModel.ISupportInitialize)(this.axWindowsMediaPlayer1)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.bindingSource1)).EndInit();
 			this.ResumeLayout(false);
 			this.PerformLayout();
@@ -288,7 +278,6 @@
 		private System.Windows.Forms.Panel playerPanel;
 		private System.Windows.Forms.Splitter splitter1;
 		private AxWMPLib.AxWindowsMediaPlayer axPreviewPlayer;
-		private AxWMPLib.AxWindowsMediaPlayer axWindowsMediaPlayer1;
 		private WeifenLuo.WinFormsUI.Docking.DockPanel dockPanel1;
 		private System.Windows.Forms.BindingSource bindingSource1;
 	}
