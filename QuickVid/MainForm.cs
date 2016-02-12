@@ -77,7 +77,7 @@ namespace QuickVid
 			{
 				axPreviewPlayer.URL = lvi.Text;
 				axPreviewPlayer.uiMode = "none";
-				axPreviewPlayer.settings.rate = 5;
+				axPreviewPlayer.settings.rate = 50;
 				axPreviewPlayer.settings.volume = 0; 
 			}
 

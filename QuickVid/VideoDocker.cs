@@ -23,7 +23,14 @@ namespace QuickVid
 		public string URL
 		{
 			get { return axWindowsMediaPlayer1.URL;  }
-			set { axWindowsMediaPlayer1.URL = value;  Text = "Now Playing... " + value; }
+			set { axWindowsMediaPlayer1.URL = value;  InitialSettings();  }
+		}
+
+		private void InitialSettings()
+		{
+			Text = "Now Playing... " + axWindowsMediaPlayer1.URL;
+			axWindowsMediaPlayer1.settings.rate = 15;
+			axWindowsMediaPlayer1.settings.volume = 0;
 		}
 	}
 }
