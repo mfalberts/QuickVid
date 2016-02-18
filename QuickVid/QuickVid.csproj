@@ -54,6 +54,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DirectoryPane.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DirectoryPane.Designer.cs">
+      <DependentUpon>DirectoryPane.cs</DependentUpon>
+    </Compile>
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -69,6 +75,9 @@
       <DependentUpon>VideoDocker.cs</DependentUpon>
     </Compile>
     <Compile Include="VideoHelper.cs" />
+    <EmbeddedResource Include="DirectoryPane.resx">
+      <DependentUpon>DirectoryPane.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>

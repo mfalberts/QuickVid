@@ -19,6 +19,13 @@ namespace QuickVid
 			InitializeComponent();
 			axWindowsMediaPlayer1.uiMode = "full";
 			axWindowsMediaPlayer1.stretchToFit = true;
+			WebBrowser youtubePlayer = new WebBrowser();
+		//	this.Controls.Add(youtubePlayer);
+		//	youtubePlayer.Dock = DockStyle.Fill;
+		//	string url = @"<iframe id='ytplayer' type='text/html' width='640' height='390'
+		//									src='http://www.youtube.com/embed/HLj0aLPLsys?autoplay=1'
+		//								frameborder='0'/>".Replace("'", "\"");
+		//	youtubePlayer.Navigate("file:///V:/iPhoneFormat/1_Dick_2_Chicks_6_Scene_3.mp4");
 		}
 		public string URL
 		{
@@ -26,10 +33,16 @@ namespace QuickVid
 			set { axWindowsMediaPlayer1.URL = value;  InitialSettings();  }
 		}
 
+		public int Volume
+		{
+			get { return axWindowsMediaPlayer1.settings.volume;  }
+			set { axWindowsMediaPlayer1.settings.volume = value;  }
+		}
 		private void InitialSettings()
 		{
+		//file:///V:\iPhoneFormat\1_Dick_2_Chicks_6_Scene_3.mp4
 			Text = "Now Playing... " + axWindowsMediaPlayer1.URL;
-			axWindowsMediaPlayer1.settings.rate = 15;
+			axWindowsMediaPlayer1.settings.rate = 1;
 			axWindowsMediaPlayer1.settings.volume = 0;
 		}
 	}
