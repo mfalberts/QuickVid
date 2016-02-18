@@ -63,7 +63,7 @@
             this.fileToolStripMenuItem});
       this.menuStrip1.Location = new System.Drawing.Point(0, 0);
       this.menuStrip1.Name = "menuStrip1";
-      this.menuStrip1.Size = new System.Drawing.Size(937, 24);
+      this.menuStrip1.Size = new System.Drawing.Size(731, 24);
       this.menuStrip1.TabIndex = 0;
       this.menuStrip1.Text = "menuStrip1";
       this.menuStrip1.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.menuStrip1_ItemClicked);
@@ -100,7 +100,7 @@
       this.playerPanel.Dock = System.Windows.Forms.DockStyle.Fill;
       this.playerPanel.Location = new System.Drawing.Point(0, 24);
       this.playerPanel.Name = "playerPanel";
-      this.playerPanel.Size = new System.Drawing.Size(937, 586);
+      this.playerPanel.Size = new System.Drawing.Size(731, 487);
       this.playerPanel.TabIndex = 3;
       // 
       // dockPanel1
@@ -110,7 +110,7 @@
       this.dockPanel1.DocumentStyle = WeifenLuo.WinFormsUI.Docking.DocumentStyle.DockingWindow;
       this.dockPanel1.Location = new System.Drawing.Point(0, 0);
       this.dockPanel1.Name = "dockPanel1";
-      this.dockPanel1.Size = new System.Drawing.Size(937, 586);
+      this.dockPanel1.Size = new System.Drawing.Size(731, 487);
       dockPanelGradient1.EndColor = System.Drawing.SystemColors.ControlLight;
       dockPanelGradient1.StartColor = System.Drawing.SystemColors.ControlLight;
       autoHideStripSkin1.DockStripGradient = dockPanelGradient1;
@@ -164,7 +164,7 @@
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-      this.ClientSize = new System.Drawing.Size(937, 610);
+      this.ClientSize = new System.Drawing.Size(731, 511);
       this.Controls.Add(this.playerPanel);
       this.Controls.Add(this.menuStrip1);
       this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
