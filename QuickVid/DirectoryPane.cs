@@ -12,8 +12,14 @@ using WeifenLuo.WinFormsUI.Docking;
 
 namespace QuickVid
 {
+
+
   public partial class DirectoryPane : DockContent
   {
+
+    public delegate void FileSelectedEventHandler(object sender, FileSelectedArgs e);
+    public event FileSelectedEventHandler FileSelected;
+
     public DirectoryPane()
     {
       InitializeComponent();
@@ -41,5 +47,29 @@ namespace QuickVid
       }
     }
 
+    private void listView1_SelectedIndexChanged(object sender, EventArgs e)
+    {
+      if (listView1.SelectedItems.Count > 0 && listView1.SelectedItems[0].Tag != null)
+        if (FileSelected != null)
+          FileSelected(this, new FileSelectedArgs((string)listView1.SelectedItems[0].Tag));
+
+    }
   }
-}
+
+  public class FileSelectedArgs : EventArgs
+  {
+    private readonly string url;
+    // Constructor. 
+    public FileSelectedArgs(string url)
+    {
+      this.url = url;
+    }
+
+    // Properties. 
+    public string URL
+    {
+      get { return url; }
+    }
+  }
+
+  }

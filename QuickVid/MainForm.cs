@@ -16,7 +16,7 @@ namespace QuickVid
 {
 	public partial class MainForm : Form
 	{
-		private VideoDockWindow ActiveDockWindow { get; set; } 
+		private VideoDockWindow LastActiveDockWindow { get; set; } 
 		private bool UseActiveDockWindow { get; set; }
 		public MainForm()
 		{
@@ -34,35 +34,31 @@ namespace QuickVid
 		private void MainForm_Load(object sender, EventArgs e)
 		{
       DirectoryPane dp = new DirectoryPane();
+      dp.FileSelected += DirectoryPaneFileSelected;
       dp.Show(dockPanel1, DockState.DockRight);
 		}
 
-		private void fileToolStripMenuItem_Click(object sender, EventArgs e)
+    private void DirectoryPaneFileSelected(object sender, FileSelectedArgs e)
+    {
+      string fileName = e.URL;
+      if (UseActiveDockWindow == false || LastActiveDockWindow == null)
+      {
+        VideoDockWindow videoDocker = new VideoDockWindow();
+        videoDocker.Show(dockPanel1, DockState.Document);
+        videoDocker.URL = fileName;
+      }
+      else
+      {
+        LastActiveDockWindow.URL = fileName;
+      }
+
+    }
+
+    private void fileToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			//test comment...
 		}
 
-		private void listView1_SelectedIndexChanged(object sender, EventArgs e)
-		{
-		//	if (listView1.SelectedItems.Count >0  && listView1.SelectedItems[0].Tag != null)
-		//	{
-    //    string fileName = listView1.SelectedItems[0].Tag.ToString();
-    //    if (UseActiveDockWindow == false || ActiveDockWindow == null)
-		//		{
-		//			//axWindowsMediaPlayer1.URL = listView1.SelectedItems[0].Text;
-		//			VideoDockWindow videoDocker = new VideoDockWindow();
-		//			videoDocker.Show(dockPanel1, DockState.Document);
-    //      videoDocker.URL = fileName;
-		//		}
-		//		else
-		//		{
-		//			ActiveDockWindow.URL = fileName;
-		//		}
-    //
-		//	}
-
-
-		}
 
 		private void toolStripMenuItem1_Click(object sender, EventArgs e)
 		{	}
@@ -91,17 +87,17 @@ namespace QuickVid
 		{
 
 			WeifenLuo.WinFormsUI.Docking.DockPanel dockPane = (WeifenLuo.WinFormsUI.Docking.DockPanel)sender;
-			VideoDockWindow videoDockWindow = (VideoDockWindow)dockPane.ActiveDocument;
+			VideoDockWindow videoDockWindow = dockPane.ActiveDocument as VideoDockWindow;
 			int lastVolume = 0;
-			if (ActiveDockWindow != null)
+			if (LastActiveDockWindow != null)
 			{ 
-				lastVolume = ActiveDockWindow.Volume;
-				ActiveDockWindow.Volume = 0;
+				lastVolume = LastActiveDockWindow.Volume;
+        LastActiveDockWindow.Volume = 0;
 			}
-			ActiveDockWindow = videoDockWindow;
-			if (ActiveDockWindow != null)
-			{ 
-				ActiveDockWindow.Volume = lastVolume;
+			LastActiveDockWindow = videoDockWindow;
+			if (videoDockWindow != null)
+			{
+        videoDockWindow.Volume = lastVolume;
 			}
 		}
 
