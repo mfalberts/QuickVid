@@ -12,13 +12,15 @@ using WeifenLuo.WinFormsUI.Docking;
 
 namespace QuickVid
 {
-	public partial class VideoDockWindow : DockContent
+	public partial class VideoDocker : DockContent, IVideoDocker
 	{
-		public VideoDockWindow()
+		public VideoDocker()
 		{
 			InitializeComponent();
 			axWindowsMediaPlayer1.uiMode = "full";
 			axWindowsMediaPlayer1.stretchToFit = true;
+      axWindowsMediaPlayer1.settings.setMode("loop", true);
+      axWindowsMediaPlayer1.MouseMoveEvent += AxWindowsMediaPlayer1_MouseMoveEvent;
       InitialSettings();
      // WebBrowser youtubePlayer = new WebBrowser();
 		//	this.Controls.Add(youtubePlayer);
@@ -28,7 +30,15 @@ namespace QuickVid
 		//								frameborder='0'/>".Replace("'", "\"");
 		//	youtubePlayer.Navigate("file:///V:/iPhoneFormat/Scene_3.mp4");
 		}
-		public string URL
+
+    private void AxWindowsMediaPlayer1_MouseMoveEvent(object sender, AxWMPLib._WMPOCXEvents_MouseMoveEvent e)
+    {
+      Control control = axWindowsMediaPlayer1.GetChildAtPoint(new Point(e.fX, e.fY));
+      Control control1 = axWindowsMediaPlayer1.GetChildAtPoint(new Point(10, 10));
+      object ocs = axWindowsMediaPlayer1.GetOcx();
+    }
+
+    public string URL
 		{
 			get { return axWindowsMediaPlayer1.URL;  }
 			set
@@ -38,7 +48,12 @@ namespace QuickVid
       }
 		}
 
-		public int Volume
+    public void Pause()
+    {
+      //axWindowsMediaPlayer1.settings.setMode
+    }
+
+    public int Volume
 		{
 			get { return axWindowsMediaPlayer1.settings.volume;  }
 			set { axWindowsMediaPlayer1.settings.volume = value;  }

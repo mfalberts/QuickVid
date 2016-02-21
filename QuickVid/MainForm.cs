@@ -16,13 +16,12 @@ namespace QuickVid
 {
 	public partial class MainForm : Form
 	{
-		private VideoDockWindow LastActiveDockWindow { get; set; } 
-		private bool UseActiveDockWindow { get; set; }
+		private IVideoDocker LastActiveVideoDockerWindow { get; set; } 
+		private bool ReuseActiveDockWindow { get; set; }
 		public MainForm()
 		{
 			InitializeComponent();
-			UseActiveDockWindow = true;
-//			SizeChanged += MainForm_SizeChanged;
+			ReuseActiveDockWindow = true;
 		}
 
 		private void menuStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
@@ -41,60 +40,46 @@ namespace QuickVid
     private void DirectoryPaneFileSelected(object sender, FileSelectedArgs e)
     {
       string fileName = e.URL;
-      if (UseActiveDockWindow == false || LastActiveDockWindow == null)
+      if (ReuseActiveDockWindow == false || LastActiveVideoDockerWindow == null)
       {
-        VideoDockWindow videoDocker = new VideoDockWindow();
+        VideoDocker videoDocker = new VideoDocker();
+        //VideoDockerWPF videoDocker = new VideoDockerWPF();
         videoDocker.Show(dockPanel1, DockState.Document);
         videoDocker.URL = fileName;
       }
       else
       {
-        LastActiveDockWindow.URL = fileName;
+        LastActiveVideoDockerWindow.URL = fileName;
       }
 
     }
 
-    private void fileToolStripMenuItem_Click(object sender, EventArgs e)
-		{
-			//test comment...
-		}
+    private void PauseAll()
+    {
+      foreach (Form child in this.MdiChildren)
+      {
+        if (child is IVideoDocker)
+        {
+          IVideoDocker vdw = (IVideoDocker)child;
+          vdw.Pause();
+        }
+      }
+      
+    }
 
-
-		private void toolStripMenuItem1_Click(object sender, EventArgs e)
-		{	}
-		private void toolStripMenuItem2_Click(object sender, EventArgs e)
-		{}
-
-
-		private void listView1_MouseHover(object sender, EventArgs e)
-		{
-		}
-
-		private void listView1_ItemMouseHover(object sender, ListViewItemMouseHoverEventArgs e)
-		{
-			//ListViewItem lvi = e.Item;
-			//if (lvi != null)
-			//{
-			//	axPreviewPlayer.URL = lvi.Text;
-			//	axPreviewPlayer.uiMode = "none";
-			//	axPreviewPlayer.settings.rate = 50;
-			//	axPreviewPlayer.settings.volume = 0; 
-			//}
-
-		}
-
+    			
 		private void dockPanel1_ActiveDocumentChanged(object sender, EventArgs e)
 		{
 
 			WeifenLuo.WinFormsUI.Docking.DockPanel dockPane = (WeifenLuo.WinFormsUI.Docking.DockPanel)sender;
-			VideoDockWindow videoDockWindow = dockPane.ActiveDocument as VideoDockWindow;
+			IVideoDocker videoDockWindow = dockPane.ActiveDocument as IVideoDocker;
 			int lastVolume = 0;
-			if (LastActiveDockWindow != null)
+			if (LastActiveVideoDockerWindow != null)
 			{ 
-				lastVolume = LastActiveDockWindow.Volume;
-        LastActiveDockWindow.Volume = 0;
+				lastVolume = LastActiveVideoDockerWindow.Volume;
+        LastActiveVideoDockerWindow.Volume = 0;
 			}
-			LastActiveDockWindow = videoDockWindow;
+			LastActiveVideoDockerWindow = videoDockWindow;
 			if (videoDockWindow != null)
 			{
         videoDockWindow.Volume = lastVolume;
@@ -103,7 +88,7 @@ namespace QuickVid
 
 		private void replaceActiveWindowToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			UseActiveDockWindow = !UseActiveDockWindow;
+			ReuseActiveDockWindow = !ReuseActiveDockWindow;
 		}
 	}
 }
