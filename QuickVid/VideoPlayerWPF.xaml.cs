@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -12,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace QuickVid
 {
@@ -23,17 +25,82 @@ namespace QuickVid
 
     public delegate void MediaReadyEventHandler(object sender, MediaReadyArgs e);
     public event MediaReadyEventHandler OnMediaReady;
-
+    private bool userIsDraggingSlider = false;
+    private ThumbNailGrabber thumbNailGrabber = new ThumbNailGrabber();
     public VideoPlayerWPF()
     {
       InitializeComponent();
       mePlayer.MediaOpened += MePlayer_MediaOpened;
+      thumbNailGrabber.OnMediaReady += ThumbNailGrabber_OnMediaReady;
+      volumeSlider.ValueChanged += VolumeSlider_ValueChanged;
+      volumeSlider.Maximum = 1;
+      volumeSlider.Interval = 1;
+      positionsSlider.ValueChanged += PositionsSlider_ValueChanged;
+      positionsSlider.MouseEnter += PositionsSlider_MouseEnter;
+      positionsSlider.MouseLeave += PositionsSlider_MouseLeave;
+      mePlayer.ScrubbingEnabled = true;
+      DispatcherTimer timer = new DispatcherTimer();
+      timer.Interval = TimeSpan.FromSeconds(1);
+      timer.Tick += timer_Tick;
+      timer.Start();
+    }
+
+    private void PositionsSlider_MouseLeave(object sender, MouseEventArgs e)
+    {
+      MyToolTip.IsOpen = false;
+
+    }
+
+    private List<Image> thumbnails;
+    private void PositionsSlider_MouseEnter(object sender, MouseEventArgs e)
+    {
+      if (thumbnails != null)
+      {
+        MyFirstPopupTextBlock.Text = "hi";
+        MyToolTip.PlacementTarget = positionsSlider;
+        MyToolTip.Placement = PlacementMode.MousePoint;
+        MyToolTip.IsOpen = false;
+        MyToolTip.IsOpen = true;
+        int second = (int) e.GetPosition(positionsSlider).X;
+        ThumbnailImage.Source = thumbnails[second].Source;
+        //MyPanel.Children.Add(thumbnails[second]);
+      }
+    }
+
+    private void ThumbNailGrabber_OnMediaReady(object sender, ThumbNailGrabber.ThumbNailReadyEventArgs e)
+    {
+      image.Source = e.Thumbnails[3].Source;
+      thumbnails = e.Thumbnails;
+    }
+
+    private void PositionsSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+    {
+      
+      mePlayer.Position = TimeSpan.FromSeconds(e.NewValue);
+      e.Handled = true;
+     
+    }
+
+    private void timer_Tick(object sender, EventArgs e)
+    {
+      if ((mePlayer.Source != null) && (mePlayer.NaturalDuration.HasTimeSpan) && (!userIsDraggingSlider))
+      {
+        positionsSlider.Minimum = 0;
+        positionsSlider.Maximum = mePlayer.NaturalDuration.TimeSpan.TotalSeconds;
+        positionsSlider.Value = mePlayer.Position.TotalSeconds;
+      }
+    }
+
+    private void VolumeSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+    {
+      mePlayer.Volume =  e.NewValue;
     }
 
     private void MePlayer_MediaOpened(object sender, RoutedEventArgs e)
     {
       if (OnMediaReady != null)
-       OnMediaReady(this,new MediaReadyArgs(mePlayer.NaturalDuration));
+        OnMediaReady(this,new MediaReadyArgs(mePlayer.NaturalDuration));
+      positionsSlider.Maximum = mePlayer.NaturalDuration.TimeSpan.TotalSeconds;
     }
 
     public string URL
@@ -45,6 +112,7 @@ namespace QuickVid
         mePlayer.Source = new Uri(value);
         mePlayer.Play();
         mePlayer.Volume = 0;
+        thumbNailGrabber.CaptureBitMaps(value);
       }
     }
 
@@ -56,17 +124,10 @@ namespace QuickVid
         return 0;
     }
 
-    public int Volume
+    public double Volume
     {
-      get
-      {
-        return 0;
-      }
-
-      set
-      {
-        mePlayer.Volume = value;
-      }
+      get  { return mePlayer.Volume;   }
+      set  { volumeSlider.Value = value;  }
     }
 
     public void Pause()

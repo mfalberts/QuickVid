@@ -16,14 +16,9 @@ namespace QuickVid
     public VideoDockerWPF()
     {
       InitializeComponent();
-      videoPlayerWPF1.OnMediaReady += VideoPlayerWPF1_OnMediaReady;
     }
 
-    private void VideoPlayerWPF1_OnMediaReady(object sender, VideoPlayerWPF.MediaReadyArgs e)
-    {
-      trackBar1.Maximum = e.DurationInfo.TimeSpan.Minutes;
-    }
-
+   
     public string URL
     {
       get
@@ -37,16 +32,16 @@ namespace QuickVid
       }
     }
 
-    public int Volume
+    public double Volume
     {
       get
       {
-        return 0;
+        return videoPlayerWPF1.Volume;
       }
 
       set
       {
-        return; 
+        videoPlayerWPF1.Volume = value; 
       }
     }
 
@@ -55,14 +50,6 @@ namespace QuickVid
       return;
     }
 
-    private void volumeTrackBar_ValueChanged(object sender, EventArgs e)
-    {
-      videoPlayerWPF1.Volume = volumeTrackBar.Value;
-    }
-
-    private void trackBar1_ValueChanged(object sender, EventArgs e)
-    {
-      videoPlayerWPF1.SetPosition(trackBar1.Value);
-    }
+ 
   }
 }

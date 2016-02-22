@@ -42,8 +42,8 @@ namespace QuickVid
       string fileName = e.URL;
       if (ReuseActiveDockWindow == false || LastActiveVideoDockerWindow == null)
       {
-        VideoDocker videoDocker = new VideoDocker();
-        //VideoDockerWPF videoDocker = new VideoDockerWPF();
+        //VideoDocker videoDocker = new VideoDocker();
+        VideoDockerWPF videoDocker = new VideoDockerWPF();
         videoDocker.Show(dockPanel1, DockState.Document);
         videoDocker.URL = fileName;
       }
@@ -73,7 +73,7 @@ namespace QuickVid
 
 			WeifenLuo.WinFormsUI.Docking.DockPanel dockPane = (WeifenLuo.WinFormsUI.Docking.DockPanel)sender;
 			IVideoDocker videoDockWindow = dockPane.ActiveDocument as IVideoDocker;
-			int lastVolume = 0;
+			double lastVolume = 0;
 			if (LastActiveVideoDockerWindow != null)
 			{ 
 				lastVolume = LastActiveVideoDockerWindow.Volume;

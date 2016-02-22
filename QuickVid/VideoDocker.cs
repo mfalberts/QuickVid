@@ -53,10 +53,10 @@ namespace QuickVid
       //axWindowsMediaPlayer1.settings.setMode
     }
 
-    public int Volume
+    public double Volume
 		{
 			get { return axWindowsMediaPlayer1.settings.volume;  }
-			set { axWindowsMediaPlayer1.settings.volume = value;  }
+			set { axWindowsMediaPlayer1.settings.volume = (int) value;  }
 		}
 		private void InitialSettings()
 		{

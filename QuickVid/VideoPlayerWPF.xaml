@@ -5,9 +5,36 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:QuickVid"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
-    <Grid>
+             d:DesignHeight="300" d:DesignWidth="400">
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="51*"/>
+      <RowDefinition Height="215*"/>
+      <RowDefinition Height="34"/>
+    </Grid.RowDefinitions>
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition Width="*"/>
+      <ColumnDefinition Width="34"/>
+      <ColumnDefinition Width="100"/>
+    </Grid.ColumnDefinitions>
+    <Border  Name="meBorder" BorderThickness="5" BorderBrush="Beige" Background="Gray" Grid.RowSpan="2">
+      <MediaElement Name="mePlayer" Grid.Row="1" LoadedBehavior="Manual" Stretch="Uniform" />
+    </Border>
+    <Slider x:Name="positionsSlider"  Grid.Row="2" Margin="0,0,0,0" TickPlacement="Both" BorderThickness="5,0"/>
+    <Slider x:Name="volumeSlider"  Grid.Row="0" Grid.Column="1" HorizontalAlignment="Left"  VerticalAlignment="Stretch" Orientation="Vertical" TickPlacement="Both" Grid.RowSpan="2" />
+    <Image x:Name="image"  Grid.Row="1" Grid.Column="2" Stretch="Uniform" Width="100" Margin="0,19,0,32"/>
+    <StackPanel Name="MyPanel">
+      <Popup  Height="Auto" Width="Auto" Name="MyToolTip" StaysOpen="True" AllowsTransparency="True"  >
+        <Border BorderThickness="1" Background="Azure" >
+          <StackPanel Margin="30"  Orientation="Horizontal">
+            <Image x:Name="ThumbnailImage"  Stretch="Uniform" Width="100" Margin="0,19,0,32"/>
 
-    <MediaElement Name="mePlayer" Grid.Row="1" LoadedBehavior="Manual" Stretch="Fill" />
+            <TextBlock Text="Total Marks: "/>
+            <TextBlock  Name="MyFirstPopupTextBlock" />
+
+          </StackPanel>
+        </Border>
+      </Popup>
+    </StackPanel>
   </Grid>
 </UserControl>

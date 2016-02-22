@@ -9,7 +9,7 @@ namespace QuickVid
   interface IVideoDocker
   {
     string URL { get; set; }
-    int Volume { get; set; }
+    double Volume { get; set; }
     void Pause();
   }
 }
