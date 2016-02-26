@@ -12,80 +12,67 @@ using DotImaging;
 
 namespace QuickVid
 {
-  public class ThumbNailGrabber
+  public class ThumbNailGrabber :IDisposable
   {
 
-    public delegate void ThumbNailReadyEventHandler(object sender, ThumbNailReadyEventArgs e);
-    public event ThumbNailReadyEventHandler OnMediaReady;
-    List<Image> images = new List<Image>();
-
-    public class ThumbNailReadyEventArgs : EventArgs
+    VideoCaptureBase reader;// = new FileCapture(url);
+    public ThumbNailGrabber(string url)
     {
-      private readonly List<Image> images;
-
-      // Constructor. 
-      public ThumbNailReadyEventArgs(List<Image> imgages)
-      {
-        this.images = imgages;
-      }
-
-      // Properties. 
-      public List<Image> Thumbnails
-      {
-        get { return images; }
-      }
-    }
-
-
-    public Image Thumbnail
-    {
-      get; set;
-    }
-
-    public void CaptureBitMaps(string url)
-    {
-      var reader = new FileCapture(url);
+      reader = new FileCapture(url);
       reader.Open();
-      long len = reader.Length;
-      Bgr<byte>[,] buffer = null;
-      long position  = 0;
-      long fps = (long)(reader.Length / 23.0);// reader.FrameRate();
-      while (position+1 < reader.Length)
-      {
-          Image i2 = new Image();
-        IImage image2 = reader.Read();
-          Bgra<byte>[,] bmp = image2.ToBgra();
-          //bmp.Save(@"c:\scratch\" + cnt.ToString()+ ".bmp");
-          i2.Source = bmp.ToBitmapSource();
-          images.Add(i2);
-          reader.Seek(fps, SeekOrigin.Current);
-        position = reader.Position;
-        //  var byteArray = new byte[image2.Width * image2.Height];
-        //  System.Runtime.InteropServices.Marshal.Copy(image2.ImageData, byteArray, 0, image2.Width * image2.Height);
-        //  BitmapSource bmp2 = BitmapSource.Create(image2.Width, image2.Height, 1 / 200, 1 / 200, PixelFormats.Pbgra32,
-        //   null, byteArray, image2.Width);
-        //  i2.Source = bmp2;
-      }
-      /*
-      reader.ReadTo(ref buffer);
-      IImage iimg = reader.Read();
-      iimg.ToBgra().
-      var frame = reader.ReadAs<Bgr<byte>>();
-      Image image = new Image();
-      image= frame;
-      DrawingVisual drawingVisual = new DrawingVisual();
-      DrawingContext drawingContext = drawingVisual.RenderOpen();
-      drawingContext.DrawImage(frame, new Rect(0, 0, 160, 105));
-      drawingContext.DrawVideo(frame, new Rect(0, 0, 160, 105));
-      drawingContext.Close();
-      RenderTargetBitmap bmp = new RenderTargetBitmap(160, 105, 1 / 200, 1 / 200, PixelFormats.Pbgra32);
-      bmp.Render(drawingVisual);
-
-      myImage.Source = bmp;
-      */
-      reader.Close();
-      if (OnMediaReady != null)
-        OnMediaReady(this, new ThumbNailReadyEventArgs(images));
     }
+
+    public Image GetThumbNail(long frame)
+    {
+      reader.Seek(frame, SeekOrigin.Begin);
+      IImage iimage = reader.Read();
+      Bgra<byte>[,] bmp = iimage.ToBgra();
+      Image image = new Image();
+      image.Source = bmp.ToBitmapSource();
+      return image;
+    }
+
+    public Image GetThumbNail(TimeSpan ts)
+    {
+      long frame = (long)(reader.FrameRate * ts.TotalSeconds);
+      return GetThumbNail(frame);
+    }
+
+    #region IDisposable Support
+    private bool disposedValue = false; // To detect redundant calls
+
+    protected virtual void Dispose(bool disposing)
+    {
+      if (!disposedValue)
+      {
+        if (disposing)
+        {
+          if (reader != null)
+            reader.Close();
+          reader = null;
+        }
+
+        // TODO: free unmanaged resources (unmanaged objects) and override a finalizer below.
+        // TODO: set large fields to null.
+
+        disposedValue = true;
+      }
+    }
+
+    // TODO: override a finalizer only if Dispose(bool disposing) above has code to free unmanaged resources.
+    // ~ThumbNailGrabber() {
+    //   // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
+    //   Dispose(false);
+    // }
+
+    // This code added to correctly implement the disposable pattern.
+    public void Dispose()
+    {
+      // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
+      Dispose(true);
+      // TODO: uncomment the following line if the finalizer is overridden above.
+      // GC.SuppressFinalize(this);
+    }
+    #endregion
   }
 }

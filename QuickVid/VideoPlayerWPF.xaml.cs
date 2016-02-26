@@ -26,23 +26,40 @@ namespace QuickVid
     public delegate void MediaReadyEventHandler(object sender, MediaReadyArgs e);
     public event MediaReadyEventHandler OnMediaReady;
     private bool userIsDraggingSlider = false;
-    private ThumbNailGrabber thumbNailGrabber = new ThumbNailGrabber();
+    private ThumbNailGrabber thumbNailGrabber;
+
     public VideoPlayerWPF()
     {
       InitializeComponent();
       mePlayer.MediaOpened += MePlayer_MediaOpened;
-      thumbNailGrabber.OnMediaReady += ThumbNailGrabber_OnMediaReady;
       volumeSlider.ValueChanged += VolumeSlider_ValueChanged;
       volumeSlider.Maximum = 1;
       volumeSlider.Interval = 1;
+      positionsSlider.
       positionsSlider.ValueChanged += PositionsSlider_ValueChanged;
       positionsSlider.MouseEnter += PositionsSlider_MouseEnter;
+      positionsSlider.MouseLeftButtonDown += PositionsSlider_MouseLeftButtonDown;
       positionsSlider.MouseLeave += PositionsSlider_MouseLeave;
+      MyToolTip.MouseLeftButtonDown += MyToolTip_MouseLeftButtonDown;
       mePlayer.ScrubbingEnabled = true;
       DispatcherTimer timer = new DispatcherTimer();
       timer.Interval = TimeSpan.FromSeconds(1);
       timer.Tick += timer_Tick;
       timer.Start();
+    }
+
+    private void MyToolTip_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+    {
+      MyToolTip.IsOpen = false;
+      PositionsSlider_MouseLeftButtonDown(sender, e);
+    }
+
+
+    private void PositionsSlider_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+    {
+      MyToolTip.IsOpen = false;
+      int second = PositionAt(e);
+      positionsSlider.Value = second;
     }
 
     private void PositionsSlider_MouseLeave(object sender, MouseEventArgs e)
@@ -51,30 +68,35 @@ namespace QuickVid
 
     }
 
-    private List<Image> thumbnails;
     private void PositionsSlider_MouseEnter(object sender, MouseEventArgs e)
     {
-      if (thumbnails != null)
+    //  double yPos = (int)(e.GetPosition(positionsSlider).Y);
+    //  if (yPos < (positionsSlider.ActualHeight / 2))
+        return; // only do this if the mouse position is above the center
+      if (thumbNailGrabber != null)
       {
-        MyFirstPopupTextBlock.Text = "hi";
-        MyToolTip.PlacementTarget = positionsSlider;
-        MyToolTip.Placement = PlacementMode.MousePoint;
-        MyToolTip.IsOpen = false;
+        //MyFirstPopupTextBlock.Text = "hi";
+        MyToolTip.PlacementTarget = image;// positionsSlider;
+        MyToolTip.Placement = PlacementMode.Absolute;//MousePoint;
+                                                     //        MyToolTip.IsOpen = false;
         MyToolTip.IsOpen = true;
-        int second = (int) e.GetPosition(positionsSlider).X;
-        if (second < thumbnails.Count)
+        int second = PositionAt(e);
+        //if (second < thumbnails.Count)
         {
-          ThumbnailImage.Source = thumbnails[second].Source;
+
+          ThumbnailImage.Source = thumbNailGrabber.GetThumbNail(new TimeSpan(0, 0, 0, second, 0)).Source;
+          //ThumbnailImage.Source = thumbnails[second].Source;
           //MyPanel.Children.RemoveRange(0, 1);
           //MyPanel.Children.Add(thumbnails[second]);
         }
       }
     }
 
-    private void ThumbNailGrabber_OnMediaReady(object sender, ThumbNailGrabber.ThumbNailReadyEventArgs e)
+    private int PositionAt(MouseEventArgs e)
     {
-      image.Source = e.Thumbnails[3].Source;
-      thumbnails = e.Thumbnails;
+      double scale = positionsSlider.ActualWidth / (double)positionsSlider.Maximum;
+      int second = (int)(e.GetPosition(positionsSlider).X / scale);
+      return second;
     }
 
     private void PositionsSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
@@ -90,7 +112,7 @@ namespace QuickVid
       if ((mePlayer.Source != null) && (mePlayer.NaturalDuration.HasTimeSpan) && (!userIsDraggingSlider))
       {
         positionsSlider.Minimum = 0;
-        positionsSlider.Maximum = mePlayer.NaturalDuration.TimeSpan.TotalSeconds;
+        positionsSlider.Maximum =  mePlayer.NaturalDuration.TimeSpan.TotalSeconds;
         positionsSlider.Value = mePlayer.Position.TotalSeconds;
       }
     }
@@ -116,7 +138,7 @@ namespace QuickVid
         mePlayer.Source = new Uri(value);
         mePlayer.Play();
         mePlayer.Volume = 0;
-        thumbNailGrabber.CaptureBitMaps(value);
+        thumbNailGrabber = new ThumbNailGrabber(value);
       }
     }
 
