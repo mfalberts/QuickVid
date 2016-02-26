@@ -83,24 +83,6 @@
       <VersionMinor>0</VersionMinor>
       <WrapperTool>aximp</WrapperTool>
     </COMReference>
-    <COMReference Include="DXTMSFTLib">
-      <EmbedInteropTypes>True</EmbedInteropTypes>
-      <Guid>{5E77EB03-937C-11D1-B047-00AA003B6061}</Guid>
-      <Isolated>False</Isolated>
-      <Lcid>0</Lcid>
-      <VersionMajor>1</VersionMajor>
-      <VersionMinor>1</VersionMinor>
-      <WrapperTool>tlbimp</WrapperTool>
-    </COMReference>
-    <COMReference Include="DXTRANSLib">
-      <EmbedInteropTypes>True</EmbedInteropTypes>
-      <Guid>{54314D1D-35FE-11D1-81A1-0000F87557DB}</Guid>
-      <Isolated>False</Isolated>
-      <Lcid>0</Lcid>
-      <VersionMajor>1</VersionMajor>
-      <VersionMinor>1</VersionMinor>
-      <WrapperTool>tlbimp</WrapperTool>
-    </COMReference>
     <COMReference Include="stdole">
       <EmbedInteropTypes>True</EmbedInteropTypes>
       <Guid>{00020430-0000-0000-C000-000000000046}</Guid>
@@ -146,6 +128,10 @@
     <Page Include="VideoPlayerWPF.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Reference Include="DotImaging.BitmapSourceInterop, Version=4.7.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\DotImaging.BitmapSourceInterop.4.7.6\lib\net45\DotImaging.BitmapSourceInterop.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="DotImaging.GenericImage, Version=4.7.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\DotImaging.GenericImage.4.7.6\lib\net45\DotImaging.GenericImage.dll</HintPath>
       <Private>True</Private>

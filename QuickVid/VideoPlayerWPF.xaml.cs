@@ -62,8 +62,12 @@ namespace QuickVid
         MyToolTip.IsOpen = false;
         MyToolTip.IsOpen = true;
         int second = (int) e.GetPosition(positionsSlider).X;
-        ThumbnailImage.Source = thumbnails[second].Source;
-        //MyPanel.Children.Add(thumbnails[second]);
+        if (second < thumbnails.Count)
+        {
+          ThumbnailImage.Source = thumbnails[second].Source;
+          //MyPanel.Children.RemoveRange(0, 1);
+          //MyPanel.Children.Add(thumbnails[second]);
+        }
       }
     }
 

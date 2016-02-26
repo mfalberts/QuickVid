@@ -8,15 +8,16 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using DotImaging;
 
 namespace QuickVid
 {
-	public class ThumbNailGrabber
-	{
+  public class ThumbNailGrabber
+  {
 
     public delegate void ThumbNailReadyEventHandler(object sender, ThumbNailReadyEventArgs e);
     public event ThumbNailReadyEventHandler OnMediaReady;
-    private Queue<TimeSpan> _positionsToThumbnail = new Queue<TimeSpan>();
+    List<Image> images = new List<Image>();
 
     public class ThumbNailReadyEventArgs : EventArgs
     {
@@ -43,124 +44,48 @@ namespace QuickVid
 
     public void CaptureBitMaps(string url)
     {
-      MediaPlayer mediaPlayer = new MediaPlayer();
-      mediaPlayer.MediaOpened += Mp_MediaOpened;
-      mediaPlayer.ScrubbingEnabled = true;
-
-      mediaPlayer.Open(new Uri(url));
-      mediaPlayer.Changed += MediaPlayer_Changed;
-      mediaPlayer.Position = TimeSpan.FromSeconds(0);
-      mediaPlayer.SpeedRatio = 1;
-//      mediaPlayer.Play();
-      mediaPlayer.MediaEnded += MediaPlayer_MediaEnded;
-
-    }
-
-    private void MediaPlayer_MediaEnded(object sender, EventArgs e)
-    {
-      if (OnMediaReady != null)
-        OnMediaReady(this, new ThumbNailReadyEventArgs(images));
-      int second = 0;
-      foreach (Image img in images)
+      var reader = new FileCapture(url);
+      reader.Open();
+      long len = reader.Length;
+      Bgr<byte>[,] buffer = null;
+      long position  = 0;
+      long fps = (long)(reader.Length / 23.0);// reader.FrameRate();
+      while (position+1 < reader.Length)
       {
-
-        JpegBitmapEncoder jpg = new JpegBitmapEncoder();
-        jpg.Frames.Add(BitmapFrame.Create((RenderTargetBitmap)img.Source));
-        using (Stream stm = File.Create(@"c:\\scratch\\" + second.ToString() + ".jpg"))
-          jpg.Save(stm);
-        second++;
-      }
-
-    }
-
-    List<Image> images = new List<Image>();
-
-    private void MediaPlayer_Changed(object sender, EventArgs e)
-    {
-
-      // If still processing the file (i.e., not done)...
-//      if (GetProcessing(this))
-      {
-        // Capture the current frame
-        CaptureCurrentFrame(false);
+          Image i2 = new Image();
+        IImage image2 = reader.Read();
+          Bgra<byte>[,] bmp = image2.ToBgra();
+          //bmp.Save(@"c:\scratch\" + cnt.ToString()+ ".bmp");
+          i2.Source = bmp.ToBitmapSource();
+          images.Add(i2);
+          reader.Seek(fps, SeekOrigin.Current);
+        position = reader.Position;
+        //  var byteArray = new byte[image2.Width * image2.Height];
+        //  System.Runtime.InteropServices.Marshal.Copy(image2.ImageData, byteArray, 0, image2.Width * image2.Height);
+        //  BitmapSource bmp2 = BitmapSource.Create(image2.Width, image2.Height, 1 / 200, 1 / 200, PixelFormats.Pbgra32,
+        //   null, byteArray, image2.Width);
+        //  i2.Source = bmp2;
       }
       /*
-      MediaPlayer mediaPlayer = sender as MediaPlayer;
-//      mediaPlayer.Position = TimeSpan.FromSeconds(second);
-      Image myImage = new Image();
+      reader.ReadTo(ref buffer);
+      IImage iimg = reader.Read();
+      iimg.ToBgra().
+      var frame = reader.ReadAs<Bgr<byte>>();
+      Image image = new Image();
+      image= frame;
       DrawingVisual drawingVisual = new DrawingVisual();
       DrawingContext drawingContext = drawingVisual.RenderOpen();
-      drawingContext.DrawVideo(mediaPlayer, new Rect(0, 0, 160, 105));
+      drawingContext.DrawImage(frame, new Rect(0, 0, 160, 105));
+      drawingContext.DrawVideo(frame, new Rect(0, 0, 160, 105));
       drawingContext.Close();
       RenderTargetBitmap bmp = new RenderTargetBitmap(160, 105, 1 / 200, 1 / 200, PixelFormats.Pbgra32);
       bmp.Render(drawingVisual);
 
       myImage.Source = bmp;
-      images.Add(myImage);
       */
-    }
-
-    private void Mp_MediaOpened(object sender, EventArgs e)
-    {
-      int interval = 10;
-      MediaPlayer mediaPlayer = sender as MediaPlayer;
-
-      int totalSeconds = (int)mediaPlayer.NaturalDuration.TimeSpan.TotalSeconds;
-      int numberFramesToThumbnail = (int)(totalSeconds / interval); 
-      uint[] framePixels;
-      uint[] previousFramePixels;
-      framePixels = new uint[mediaPlayer.NaturalVideoWidth * mediaPlayer.NaturalVideoHeight];
-      previousFramePixels = new uint[framePixels.Length];
-
-      // Enqueue a position for each frame (at the center of each of the N segments)
-      for (int i = 0; i < numberFramesToThumbnail; i++)
-      {
-        _positionsToThumbnail.Enqueue(TimeSpan.FromSeconds((((2 * i) + 1) * totalSeconds) / (2 * numberFramesToThumbnail)));
-      }
-
-      // Capture the first frame as a baseline
-      RenderBitmapAndCapturePixels(mediaPlayer, previousFramePixels);
-
-      // Seek to the first thumbnail position
-      SeekToNextThumbnailPosition();
-
-    }
-
-    private void SeekToNextThumbnailPosition(MediaPlayer mediaPlayer)
-    {
-      // If more frames remain to capture...
-      if (0 < _positionsToThumbnail.Count)
-      {
-        // Seek to next position and start watchdog timer
-        mediaPlayer.Position = _positionsToThumbnail.Dequeue();
-        _watchdogTimer.Start();
-      }
-      else
-      {
-        // Done; close media file and stop processing
-        mediaPlayer.Close();
-        //framePixels = null;
-        //previousFramePixels = null;
-        SetProcessing(this, false);
-      }
-    }
-
-    private ImageSource RenderBitmapAndCapturePixels(MediaPlayer mediaPlayer, uint[] pixels)
-    {
-      // Render the current frame into a bitmap
-      var drawingVisual = new DrawingVisual();
-      var renderTargetBitmap = new RenderTargetBitmap(mediaPlayer.NaturalVideoWidth, mediaPlayer.NaturalVideoHeight, 96, 96, PixelFormats.Default);
-      using (var drawingContext = drawingVisual.RenderOpen())
-      {
-        drawingContext.DrawVideo(mediaPlayer, new Rect(0, 0, mediaPlayer.NaturalVideoWidth, mediaPlayer.NaturalVideoHeight));
-      }
-      renderTargetBitmap.Render(drawingVisual);
-
-      // Copy the pixels to the specified location
-      renderTargetBitmap.CopyPixels(pixels, mediaPlayer.NaturalVideoWidth * 4, 0);
-
-      // Return the bitmap
-      return renderTargetBitmap;
+      reader.Close();
+      if (OnMediaReady != null)
+        OnMediaReady(this, new ThumbNailReadyEventArgs(images));
     }
   }
 }
