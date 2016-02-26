@@ -35,7 +35,6 @@ namespace QuickVid
       volumeSlider.ValueChanged += VolumeSlider_ValueChanged;
       volumeSlider.Maximum = 1;
       volumeSlider.Interval = 1;
-      positionsSlider.
       positionsSlider.ValueChanged += PositionsSlider_ValueChanged;
       positionsSlider.MouseEnter += PositionsSlider_MouseEnter;
       positionsSlider.MouseLeftButtonDown += PositionsSlider_MouseLeftButtonDown;
@@ -72,12 +71,12 @@ namespace QuickVid
     {
     //  double yPos = (int)(e.GetPosition(positionsSlider).Y);
     //  if (yPos < (positionsSlider.ActualHeight / 2))
-        return; // only do this if the mouse position is above the center
+       // return; // only do this if the mouse position is above the center
       if (thumbNailGrabber != null)
       {
         //MyFirstPopupTextBlock.Text = "hi";
-        MyToolTip.PlacementTarget = image;// positionsSlider;
-        MyToolTip.Placement = PlacementMode.Absolute;//MousePoint;
+        MyToolTip.PlacementTarget = mePlayer;// positionsSlider;
+        MyToolTip.Placement = PlacementMode.Center;//MousePoint;
                                                      //        MyToolTip.IsOpen = false;
         MyToolTip.IsOpen = true;
         int second = PositionAt(e);
