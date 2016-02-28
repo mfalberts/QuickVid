@@ -18,6 +18,7 @@ namespace QuickVid
       InitializeComponent();
     }
 
+    public DockContent DockContent { get { return this; } }
    
     public string URL
     {
@@ -47,9 +48,12 @@ namespace QuickVid
 
     public void Pause()
     {
-      return;
+      videoPlayerWPF1.Pause();
+    }
+    public void Play()
+    {
+      videoPlayerWPF1.Play();
     }
 
- 
   }
 }

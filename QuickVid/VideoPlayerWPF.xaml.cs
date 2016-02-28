@@ -14,6 +14,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
+using WeifenLuo.WinFormsUI.Docking;
 
 namespace QuickVid
 {
@@ -47,6 +48,7 @@ namespace QuickVid
       timer.Start();
     }
 
+
     private void MyToolTip_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
     {
       MyToolTip.IsOpen = false;
@@ -69,27 +71,24 @@ namespace QuickVid
 
     private void PositionsSlider_MouseEnter(object sender, MouseEventArgs e)
     {
-    //  double yPos = (int)(e.GetPosition(positionsSlider).Y);
-    //  if (yPos < (positionsSlider.ActualHeight / 2))
-       // return; // only do this if the mouse position is above the center
+      //  double yPos = (int)(e.GetPosition(positionsSlider).Y);
+      //  if (yPos < (positionsSlider.ActualHeight / 2))
+      // return; // only do this if the mouse position is above the center
       if (thumbNailGrabber != null)
       {
         //MyFirstPopupTextBlock.Text = "hi";
-        MyToolTip.PlacementTarget = mePlayer;// positionsSlider;
-        MyToolTip.Placement = PlacementMode.Center;//MousePoint;
-                                                     //        MyToolTip.IsOpen = false;
+        // fix up size to be proportional to window size
+        ThumbnailImage.Width = ThumbnailImage.Height = this.ActualWidth * 0.25;
+        MyToolTip.PlacementTarget = meBorder;// positionsSlider;
+        MyToolTip.Placement =  PlacementMode.Bottom;//MousePoint;
+        MyToolTip.VerticalOffset = ThumbnailImage.ActualHeight * -1 * 1.30;
+        MyToolTip.HorizontalOffset = 10;
         MyToolTip.IsOpen = true;
         int second = PositionAt(e);
-        //if (second < thumbnails.Count)
-        {
-
-          ThumbnailImage.Source = thumbNailGrabber.GetThumbNail(new TimeSpan(0, 0, 0, second, 0)).Source;
-          //ThumbnailImage.Source = thumbnails[second].Source;
-          //MyPanel.Children.RemoveRange(0, 1);
-          //MyPanel.Children.Add(thumbnails[second]);
-        }
+        ThumbnailImage.Source = thumbNailGrabber.GetThumbNail(new TimeSpan(0, 0, 0, second, 0)).Source;
       }
     }
+    
 
     private int PositionAt(MouseEventArgs e)
     {
@@ -128,6 +127,8 @@ namespace QuickVid
       positionsSlider.Maximum = mePlayer.NaturalDuration.TimeSpan.TotalSeconds;
     }
 
+    public DockContent DockContent { get { return null; } }
+
     public string URL
     {
       get   { return  mePlayer.Source.ToString();  }
@@ -158,6 +159,10 @@ namespace QuickVid
     public void Pause()
     {
       mePlayer.Pause();
+    }
+    public void Play()
+    {
+      mePlayer.Play();
     }
 
     public void SetPosition(int time)

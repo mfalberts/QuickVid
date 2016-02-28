@@ -38,6 +38,8 @@ namespace QuickVid
       object ocs = axWindowsMediaPlayer1.GetOcx();
     }
 
+    public DockContent DockContent { get { return this; } }
+
     public string URL
 		{
 			get { return axWindowsMediaPlayer1.URL;  }
@@ -49,6 +51,11 @@ namespace QuickVid
 		}
 
     public void Pause()
+    {
+      //axWindowsMediaPlayer1.settings.setMode
+    }
+
+    public void Play()
     {
       //axWindowsMediaPlayer1.settings.setMode
     }

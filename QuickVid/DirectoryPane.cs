@@ -24,8 +24,8 @@ namespace QuickVid
     {
       InitializeComponent();
       directoryCombo.SelectedIndexChanged += DirectoryCombo_SelectedIndexChanged;
-      //directoryCombo.Items.Add(@"V:\iPhoneFormat");
-      directoryCombo.Items.Add(@"c:\scratch\mp4");
+      directoryCombo.Items.Add(@"V:\iPhoneFormat");
+      //directoryCombo.Items.Add(@"c:\scratch\mp4");
       directoryCombo.SelectedIndex = 0;
 //      PopluateFileList();
     }

@@ -1,27 +1,23 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
 using DotImaging;
 
 namespace QuickVid
 {
-  public class ThumbNailGrabber :IDisposable
+  public class ThumbNailGrabber : IDisposable
   {
 
-    VideoCaptureBase reader;// = new FileCapture(url);
+    VideoCaptureBase reader;
     public ThumbNailGrabber(string url)
     {
       reader = new FileCapture(url);
       reader.Open();
     }
-
+    ~ThumbNailGrabber()
+    {
+      Dispose(false);
+    }
     public Image GetThumbNail(long frame)
     {
       reader.Seek(frame, SeekOrigin.Begin);

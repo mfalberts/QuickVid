@@ -22,7 +22,7 @@ namespace QuickVid
 			}
 			catch (Exception e)
 			{
-
+        MessageBox.Show(e.Message, "Fatal Error", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
 			}
 		}
 	}

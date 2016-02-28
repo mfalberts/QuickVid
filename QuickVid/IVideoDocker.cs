@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using WeifenLuo.WinFormsUI.Docking;
 
 namespace QuickVid
 {
@@ -11,5 +7,8 @@ namespace QuickVid
     string URL { get; set; }
     double Volume { get; set; }
     void Pause();
+    void Play();
+    DockContent DockContent { get; }
+
   }
 }
