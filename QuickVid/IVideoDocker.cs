@@ -1,5 +1,4 @@
-﻿using WeifenLuo.WinFormsUI.Docking;
-
+﻿
 namespace QuickVid
 {
   interface IVideoDocker
@@ -8,7 +7,5 @@ namespace QuickVid
     double Volume { get; set; }
     void Pause();
     void Play();
-    DockContent DockContent { get; }
-
   }
 }

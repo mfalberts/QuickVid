@@ -18,8 +18,7 @@ namespace QuickVid
       InitializeComponent();
     }
 
-    public DockContent DockContent { get { return this; } }
-   
+    
     public string URL
     {
       get

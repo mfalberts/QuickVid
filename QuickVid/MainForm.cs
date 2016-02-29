@@ -24,6 +24,7 @@ namespace QuickVid
 			InitializeComponent();
 			ReuseActiveDockWindow = reuseActiveWindowMenuItem.Checked;
       AutoMute = autoMuteMenuItem.Checked;
+      
 		}
 
 		private void menuStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
@@ -36,6 +37,7 @@ namespace QuickVid
 		{
       DirectoryPane dp = new DirectoryPane();
       dp.FileSelected += DirectoryPaneFileSelected;
+      dp.AllowEndUserDocking = false;
       dp.Show(dockPanel2, DockState.Document);
 		}
 
@@ -45,9 +47,11 @@ namespace QuickVid
       if (ReuseActiveDockWindow == false || LastActiveVideoDockerWindow == null)
       {
         //VideoDocker videoDocker = new VideoDocker();
+        dockPanel1.SuspendLayout(true);
         VideoDockerWPF videoDocker = new VideoDockerWPF();
         videoDocker.Show(dockPanel1, DockState.Document);
         videoDocker.URL = fileName;
+        dockPanel1.ResumeLayout(true, true);
       }
       else
       {
@@ -93,8 +97,9 @@ namespace QuickVid
 
     private void ArrangeAll()
     {
-      List<IVideoDocker> videoWindows = AllDockWindows();
+      dockPanel1.SuspendLayout(true);
 
+      List<IVideoDocker> videoWindows = AllDockWindows();
       List<DockPane> panes = new List<DockPane>();
       foreach (DockPane dp in dockPanel1.Panes)
         if (dp.ActiveContent is IVideoDocker)
@@ -118,6 +123,7 @@ namespace QuickVid
             dc.DockTo(dockPanel1, DockStyle.Right);
           cnt++;
         }
+      dockPanel1.ResumeLayout(true, true);
 
     }
 

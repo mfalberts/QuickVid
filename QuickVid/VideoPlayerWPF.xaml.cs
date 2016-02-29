@@ -14,7 +14,6 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
-using WeifenLuo.WinFormsUI.Docking;
 
 namespace QuickVid
 {
@@ -39,8 +38,14 @@ namespace QuickVid
       positionsSlider.ValueChanged += PositionsSlider_ValueChanged;
       positionsSlider.MouseEnter += PositionsSlider_MouseEnter;
       positionsSlider.MouseLeftButtonDown += PositionsSlider_MouseLeftButtonDown;
+      positionsSlider.PreviewMouseLeftButtonDown += PositionsSlider_PreviewMouseLeftButtonDown;
       positionsSlider.MouseLeave += PositionsSlider_MouseLeave;
+      positionsSlider.MouseMove += PositionsSlider_MouseMove;
+      
       MyToolTip.MouseLeftButtonDown += MyToolTip_MouseLeftButtonDown;
+      playButton.Click += PlayButton_Click;
+      pauseButton.Click += PauseButton_Click;
+      muteButton.Click += MuteButton_Click;
       mePlayer.ScrubbingEnabled = true;
       DispatcherTimer timer = new DispatcherTimer();
       timer.Interval = TimeSpan.FromSeconds(1);
@@ -48,6 +53,26 @@ namespace QuickVid
       timer.Start();
     }
 
+    private void PositionsSlider_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+    {
+      MyToolTip.IsOpen = false;
+      PositionsSlider_MouseLeftButtonDown(sender, e);
+    }
+
+    private void MuteButton_Click(object sender, RoutedEventArgs e)
+    {
+      mePlayer.Volume = 0;
+    }
+
+    private void PauseButton_Click(object sender, RoutedEventArgs e)
+    {
+      mePlayer.Pause();
+    }
+
+    private void PlayButton_Click(object sender, RoutedEventArgs e)
+    {
+      mePlayer.Play();
+    }
 
     private void MyToolTip_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
     {
@@ -69,24 +94,27 @@ namespace QuickVid
 
     }
 
-    private void PositionsSlider_MouseEnter(object sender, MouseEventArgs e)
+    private void PositionsSlider_MouseMove(object sender, MouseEventArgs e)
     {
-      //  double yPos = (int)(e.GetPosition(positionsSlider).Y);
-      //  if (yPos < (positionsSlider.ActualHeight / 2))
-      // return; // only do this if the mouse position is above the center
       if (thumbNailGrabber != null)
       {
         //MyFirstPopupTextBlock.Text = "hi";
         // fix up size to be proportional to window size
-        ThumbnailImage.Width = ThumbnailImage.Height = this.ActualWidth * 0.25;
+        ThumbnailImage.Width = ThumbnailImage.Height = Math.Max(mePlayer.ActualHeight,mePlayer.ActualWidth) * 0.25;
         MyToolTip.PlacementTarget = meBorder;// positionsSlider;
-        MyToolTip.Placement =  PlacementMode.Bottom;//MousePoint;
-        MyToolTip.VerticalOffset = ThumbnailImage.ActualHeight * -1 * 1.30;
-        MyToolTip.HorizontalOffset = 10;
+        MyToolTip.Placement = PlacementMode.Bottom;//MousePoint;
+        MyToolTip.VerticalOffset = ThumbnailImage.Height * -1 * 1.25;
+        MyToolTip.HorizontalOffset = e.MouseDevice.GetPosition(positionsSlider).X;
         MyToolTip.IsOpen = true;
+        bool ismc = IsMouseCaptured;
         int second = PositionAt(e);
         ThumbnailImage.Source = thumbNailGrabber.GetThumbNail(new TimeSpan(0, 0, 0, second, 0)).Source;
       }
+    }
+
+    private void PositionsSlider_MouseEnter(object sender, MouseEventArgs e)
+    {
+      PositionsSlider_MouseMove(sender, e);
     }
     
 
@@ -127,7 +155,6 @@ namespace QuickVid
       positionsSlider.Maximum = mePlayer.NaturalDuration.TimeSpan.TotalSeconds;
     }
 
-    public DockContent DockContent { get { return null; } }
 
     public string URL
     {

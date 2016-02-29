@@ -38,7 +38,6 @@ namespace QuickVid
       object ocs = axWindowsMediaPlayer1.GetOcx();
     }
 
-    public DockContent DockContent { get { return this; } }
 
     public string URL
 		{

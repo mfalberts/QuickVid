@@ -179,8 +179,8 @@
       // dockPanel1
       // 
       this.dockPanel1.AllowDrop = true;
+      this.dockPanel1.DefaultFloatWindowSize = new System.Drawing.Size(1500, 1000);
       this.dockPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.dockPanel1.DocumentStyle = WeifenLuo.WinFormsUI.Docking.DocumentStyle.DockingWindow;
       this.dockPanel1.Location = new System.Drawing.Point(0, 49);
       this.dockPanel1.Name = "dockPanel1";
       this.dockPanel1.Size = new System.Drawing.Size(487, 462);
@@ -300,6 +300,7 @@
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+      this.BackColor = System.Drawing.SystemColors.Control;
       this.ClientSize = new System.Drawing.Size(731, 511);
       this.Controls.Add(this.splitter1);
       this.Controls.Add(this.dockPanel1);
