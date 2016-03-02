@@ -9,6 +9,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using WeifenLuo.WinFormsUI.Docking;
+using System.Security.Cryptography;
+using System.Threading;
 
 namespace QuickVid
 {
@@ -43,11 +45,36 @@ namespace QuickVid
       lv.Columns.Add("Date Modified");
 
     }
+    public static class ThreadSafeRandom
+    {
+      [ThreadStatic]
+      private static Random Local;
+
+      public static Random ThisThreadsRandom
+      {
+        get { return Local ?? (Local = new Random(unchecked(Environment.TickCount * 31 + Thread.CurrentThread.ManagedThreadId))); }
+      }
+    }
+    private  void Shuffle<T>(IList<T> list)
+    {
+      int n = list.Count;
+      while (n > 1)
+      {
+        n--;
+        int k = ThreadSafeRandom.ThisThreadsRandom.Next(n + 1);
+        T value = list[k];
+        list[k] = list[n];
+        list[n] = value;
+      }
+    }
+
     private void PopluateFileList(string directoryName)
     {
       if (Directory.Exists(directoryName) == false)
         return;
-      string[] files = Directory.GetFiles(directoryName);
+      string[] filesArray = Directory.GetFiles(directoryName);
+      List<string> files = filesArray.ToList<string>();
+      Shuffle<string>(files); // randomize...
       SetListViewColumns();
       foreach (string file in files)
       {
@@ -62,6 +89,7 @@ namespace QuickVid
       lv.Columns[1].AutoResize(ColumnHeaderAutoResizeStyle.ColumnContent);
 
     }
+
 
     private void listView1_SelectedIndexChanged(object sender, EventArgs e)
     {
