@@ -68,9 +68,9 @@
       this.toolStrip1 = new System.Windows.Forms.ToolStrip();
       this.pauseAllButton = new System.Windows.Forms.ToolStripButton();
       this.playAllButton = new System.Windows.Forms.ToolStripButton();
-      this.bindingSource1 = new System.Windows.Forms.BindingSource(this.components);
       this.muteAllButton = new System.Windows.Forms.ToolStripButton();
       this.autoArrangeButton = new System.Windows.Forms.ToolStripButton();
+      this.bindingSource1 = new System.Windows.Forms.BindingSource(this.components);
       this.dockPanel1 = new WeifenLuo.WinFormsUI.Docking.DockPanel();
       this.dockPanel2 = new WeifenLuo.WinFormsUI.Docking.DockPanel();
       this.splitter1 = new System.Windows.Forms.Splitter();
@@ -290,10 +290,11 @@
       // 
       // splitter1
       // 
-      this.splitter1.Location = new System.Drawing.Point(0, 49);
+      this.splitter1.Dock = System.Windows.Forms.DockStyle.Right;
+      this.splitter1.Location = new System.Drawing.Point(484, 49);
       this.splitter1.Name = "splitter1";
       this.splitter1.Size = new System.Drawing.Size(3, 462);
-      this.splitter1.TabIndex = 7;
+      this.splitter1.TabIndex = 10;
       this.splitter1.TabStop = false;
       // 
       // MainForm

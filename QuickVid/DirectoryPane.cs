@@ -26,10 +26,18 @@ namespace QuickVid
     {
       InitializeComponent();
       directoryCombo.SelectedIndexChanged += DirectoryCombo_SelectedIndexChanged;
-      directoryCombo.Items.Add(@"V:\iPhoneFormat");
+      directoryCombo.Items.Add(@"V:\iPhoneFormat\Mml");
       //directoryCombo.Items.Add(@"c:\scratch\mp4");
       directoryCombo.SelectedIndex = 0;
+      fileSelectorWPF1.FileSelected += FileSelectorWPF1_FileSelected;
 //      PopluateFileList();
+    }
+
+    private void FileSelectorWPF1_FileSelected(object sender, FileSelectorWPF.FileSelectedArgs e)
+    {
+      if (FileSelected != null)
+        FileSelected(this, new FileSelectedArgs(e.URL));
+      
     }
 
     private void DirectoryCombo_SelectedIndexChanged(object sender, EventArgs e)
@@ -75,6 +83,9 @@ namespace QuickVid
       string[] filesArray = Directory.GetFiles(directoryName);
       List<string> files = filesArray.ToList<string>();
       Shuffle<string>(files); // randomize...
+
+      fileSelectorWPF1.SetFileList(files);
+
       SetListViewColumns();
       foreach (string file in files)
       {

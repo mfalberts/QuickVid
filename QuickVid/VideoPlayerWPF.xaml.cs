@@ -1,18 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.Windows.Threading;
 
 namespace QuickVid
@@ -47,10 +37,11 @@ namespace QuickVid
       pauseButton.Click += PauseButton_Click;
       muteButton.Click += MuteButton_Click;
       mePlayer.ScrubbingEnabled = true;
-      DispatcherTimer timer = new DispatcherTimer();
-      timer.Interval = TimeSpan.FromSeconds(1);
-      timer.Tick += timer_Tick;
-      timer.Start();
+
+      DispatcherTimer positionTimer = new DispatcherTimer();
+      positionTimer.Interval = TimeSpan.FromSeconds(1);
+      positionTimer.Tick += timer_Tick;
+      positionTimer.Start();
     }
 
     private void PositionsSlider_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -100,15 +91,17 @@ namespace QuickVid
       {
         //MyFirstPopupTextBlock.Text = "hi";
         // fix up size to be proportional to window size
-        ThumbnailImage.Width = ThumbnailImage.Height = Math.Max(mePlayer.ActualHeight,mePlayer.ActualWidth) * 0.25;
+        ThumbnailImage.Width = ThumbnailImage.Height = Math.Max(meBorder.ActualHeight,meBorder.ActualWidth) * 0.25;
+        double width =  Math.Max(meBorder.ActualHeight,meBorder.ActualWidth) * 0.25;
+        MyToolTip.PlacementRectangle = new Rect(0, meBorder.ActualHeight - width*2, width, width);
         MyToolTip.PlacementTarget = meBorder;// positionsSlider;
         MyToolTip.Placement = PlacementMode.Bottom;//MousePoint;
-        MyToolTip.VerticalOffset = ThumbnailImage.Height * -1 * 1.25;
-        MyToolTip.HorizontalOffset = e.MouseDevice.GetPosition(positionsSlider).X;
+        //MyToolTip.VerticalOffset = ThumbnailImage.Height * -1 * 1.25;
+        MyToolTip.HorizontalOffset = Math.Max(0, e.MouseDevice.GetPosition(positionsSlider).X);
         MyToolTip.IsOpen = true;
         bool ismc = IsMouseCaptured;
         int second = PositionAt(e);
-        ThumbnailImage.Source = thumbNailGrabber.GetThumbNail(new TimeSpan(0, 0, 0, second, 0)).Source;
+        ThumbnailImage.Source = thumbNailGrabber.GetThumbNail(new TimeSpan(0, 0, 0, second, 0));
       }
     }
 

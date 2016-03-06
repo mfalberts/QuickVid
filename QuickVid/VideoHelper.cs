@@ -2,6 +2,7 @@
 using System.IO;
 using System.Windows.Controls;
 using DotImaging;
+using System.Windows.Media.Imaging;
 
 namespace QuickVid
 {
@@ -11,31 +12,50 @@ namespace QuickVid
     VideoCaptureBase reader;
     public ThumbNailGrabber(string url)
     {
-      reader = new FileCapture(url);
-      reader.Open();
+      try
+      {
+        reader = new FileCapture(url);
+        reader.Open();
+      } catch (Exception ex)
+      {
+        ExceptionMessage = ex.Message;
+      }
     }
     ~ThumbNailGrabber()
     {
-      Dispose(false);
+      Dispose(true);
     }
-    public Image GetThumbNail(long frame)
+
+    public long Frames()
     {
+      if (reader == null) return 0;
+      return reader.Length;
+
+    }
+
+    public BitmapSource GetThumbNailSource(long frame)
+    {
+      if (reader == null) return null;
       reader.Seek(frame, SeekOrigin.Begin);
       IImage iimage = reader.Read();
       Bgra<byte>[,] bmp = iimage.ToBgra();
-      Image image = new Image();
-      image.Source = bmp.ToBitmapSource();
-      return image;
+      return bmp != null ? bmp.ToBitmapSource() : null;
+
+
     }
 
-    public Image GetThumbNail(TimeSpan ts)
+
+    public BitmapSource GetThumbNail(TimeSpan ts)
     {
+      if (reader == null) return null;
       long frame = (long)(reader.FrameRate * ts.TotalSeconds);
-      return GetThumbNail(frame);
+      return GetThumbNailSource(frame);
     }
 
     #region IDisposable Support
     private bool disposedValue = false; // To detect redundant calls
+
+    public string ExceptionMessage { get; private set; }
 
     protected virtual void Dispose(bool disposing)
     {
