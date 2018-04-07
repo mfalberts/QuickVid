@@ -82,7 +82,8 @@ namespace QuickVid
         return;
       string[] filesArray = Directory.GetFiles(directoryName);
       List<string> files = filesArray.ToList<string>();
-      Shuffle<string>(files); // randomize...
+      //Shuffle<string>(files); // randomize...
+      files = files.OrderBy(o => Directory.GetLastWriteTime(o)).ToList();
 
       fileSelectorWPF1.SetFileList(files);
 

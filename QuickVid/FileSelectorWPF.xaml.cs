@@ -122,7 +122,7 @@ namespace QuickVid
             images.Add(file, bmps);
         });
       }
-      );
+      ).ConfigureAwait(true);  // configureawait?? need to look for all places..
       return 43;
 
     }
@@ -189,7 +189,7 @@ namespace QuickVid
         listGrid.Children.Add(name);
         row++;
       }
-     await LoadAllThumbnails(files);
+     await LoadAllThumbnails(files).ConfigureAwait(false);//mfa?? 4/4/2018
      UpdateThumbnails(false);
       //LoadAllThumbnails2(files);      
 

@@ -83,12 +83,12 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="VideoDocker.cs">
+    <None Include="VideoDocker.cs">
       <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="VideoDocker.Designer.cs">
+    </None>
+    <None Include="VideoDocker.Designer.cs">
       <DependentUpon>VideoDocker.cs</DependentUpon>
-    </Compile>
+    </None>
     <Compile Include="VideoDockerWPF.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -142,9 +142,9 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="VideoDocker.resx">
+    <None Include="VideoDocker.resx">
       <DependentUpon>VideoDocker.cs</DependentUpon>
-    </EmbeddedResource>
+    </None>
     <EmbeddedResource Include="VideoDockerWPF.resx">
       <DependentUpon>VideoDockerWPF.cs</DependentUpon>
     </EmbeddedResource>
